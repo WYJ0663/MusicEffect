@@ -27,7 +27,7 @@
                 android:id="@+id/test_bezier"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="贝塞尔"/>
+                android:text="贝塞尔" android:visibility="gone"/>
 
         <Button
                 android:id="@+id/ancient"
@@ -41,6 +41,35 @@
                 android:layout_height="wrap_content"
                 android:text="混响"/>
 
+        <Button
+                android:id="@+id/bass"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="低音"/>
+
+        <Button
+                android:id="@+id/electronic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="电音"/>
+
+        <Button
+                android:id="@+id/valve"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="电子管"/>
+
+        <Button
+                android:id="@+id/surround"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="环绕"/>
+
+        <Button
+                android:id="@+id/Lonelye"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="孤独"/>
     </com.example.musiceffect.widget.FlowLayout>
 
     <com.example.musiceffect.widget.EffectView

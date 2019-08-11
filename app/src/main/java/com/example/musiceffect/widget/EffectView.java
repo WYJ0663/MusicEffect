@@ -2,21 +2,28 @@ package com.example.musiceffect.widget;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.ImageView;
 import com.example.musiceffect.drawble.AncientEffectDrawable;
-import com.example.musiceffect.drawble.AncientEffectDrawable2;
-import com.example.musiceffect.drawble.ReverberationEffectDrawable2;
-import com.example.musiceffect.drawble.BaseEffectDrawable;
+import com.example.musiceffect.drawble.BlastBassEffectDrawable;
+import com.example.musiceffect.drawble.ElectronicEffectDrawable;
+import com.example.musiceffect.drawble.LonelyEffectDrawable;
+import com.example.musiceffect.drawble.SurroundEffectDrawable;
+import com.example.musiceffect.drawble.TestDrawable;
 import com.example.musiceffect.drawble.ReverberationEffectDrawable;
+import com.example.musiceffect.drawble.BaseEffectDrawable;
+import com.example.musiceffect.drawble.ReverberationEffectDrawableOld;
+import com.example.musiceffect.drawble.ValveEffectDrawable;
 
 import java.util.ArrayList;
 
 public class EffectView extends ImageView {
-    public static final int LUMP_OFFSET = 4;
-    public static final int LUMP_COUNT = 360 / LUMP_OFFSET;
+
     private int mPaintColor = Color.parseColor("#CABFA3");
+    private int[] mPaintColors;
+
     public EffectView(Context context) {
         super(context);
         init();
@@ -38,34 +45,54 @@ public class EffectView extends ImageView {
 
     private BaseEffectDrawable mDrawable;
 
-    public void setAncientEffectDrawable() {
-        mDrawable = new AncientEffectDrawable(getContext(), LUMP_COUNT, LUMP_OFFSET);
+    private void initDrawable(BaseEffectDrawable drawable) {
+        mDrawable = drawable;
         setImageDrawable(mDrawable);
         setColor();
     }
 
-    public void setAncientEffectDrawable2() {
-        mDrawable = new AncientEffectDrawable2(getContext(), LUMP_COUNT, LUMP_OFFSET);
-        setImageDrawable(mDrawable);
-        invalidate();
-        setColor();
-    }
-    public void setAncientEffectDrawable3() {
-        mDrawable = new ReverberationEffectDrawable(getContext(), LUMP_COUNT, LUMP_OFFSET);
-        setImageDrawable(mDrawable);
-        invalidate();
-        setColor();
+    public void setAncientEffectDrawable() {
+        initDrawable(new AncientEffectDrawable(getContext()));
     }
 
     public void setReverberationEffectDrawable() {
-        mDrawable = new ReverberationEffectDrawable2(getContext(), LUMP_COUNT, LUMP_OFFSET);
-        setImageDrawable(mDrawable);
-        setColor();
+        initDrawable(new ReverberationEffectDrawable(getContext()));
     }
 
-    public void setColor(){
+    public void setBlastBassEffectDrawable() {
+        initDrawable(new BlastBassEffectDrawable(getContext()));
+    }
+
+    public void setElectronicEffectDrawable() {
+        initDrawable(new ElectronicEffectDrawable(getContext()));
+    }
+
+    public void setSurroundEffectDrawable() {
+        initDrawable(new SurroundEffectDrawable(getContext()));
+    }
+    public void setLonelyEffectDrawable() {
+        initDrawable(new LonelyEffectDrawable(getContext()));
+    }
+
+    public void setValveEffectDrawable() {
+        initDrawable(new ValveEffectDrawable(getContext()));
+    }
+
+
+    @Deprecated
+    public void setTestDrawable() {
+        initDrawable(new TestDrawable(getContext()));
+    }
+
+    @Deprecated
+    public void setAncientEffectDrawable3() {
+        initDrawable(new ReverberationEffectDrawableOld(getContext()));
+    }
+
+    public void setColor() {
         if (mDrawable != null) {
             mDrawable.setColor(mPaintColor);
+            mDrawable.setColors(mPaintColors);
         }
     }
 
@@ -76,37 +103,21 @@ public class EffectView extends ImageView {
         }
     }
 
-    public void setColor(ArrayList<Integer> colors) {
+    public void setColors(int[] colors) {
+        mPaintColors = colors;
         if (mDrawable != null) {
-            mDrawable.setColor(colors);
+            mDrawable.setColors(colors);
         }
     }
 
     public void setData(final byte[] data) {
         if (data != null) {
-            Log.e("yijunwu", (int)data[0] + " " + (int)data[1]);
+            Log.e("yijunwu", (int) data[0] + " " + (int) data[1]);
         }
         if (mDrawable != null) {
-            mDrawable.setData(readyData(data));
+            mDrawable.setData(data);
         }
     }
-
-    /**
-     * 预处理数据
-     *
-     * @return
-     */
-    private byte[] readyData(byte[] fft) {
-        byte[] newData = new byte[LUMP_COUNT];
-        byte abs;
-        for (int i = 0; i < LUMP_COUNT; i++) {
-            abs = (byte) Math.abs(fft[i]);
-            //描述：Math.abs -128时越界
-            newData[i] = abs < 0 ? 127 : abs;
-        }
-        return newData;
-    }
-
 
 
 }

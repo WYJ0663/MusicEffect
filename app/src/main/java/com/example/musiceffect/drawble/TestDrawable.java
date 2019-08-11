@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PathMeasure;
 import android.graphics.Point;
+import android.graphics.PointF;
 import android.os.SystemClock;
 import com.example.musiceffect.utils.BezierCurveUtil;
 import com.example.musiceffect.helper.CircleDrawHelper;
@@ -17,33 +18,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class AncientEffectDrawable2 extends BaseEffectDrawable {
+@Deprecated
+public class TestDrawable extends BaseEffectDrawable {
 
-    private static final int TRIANGLE_SIZE = 5;
-    private int mCount;
-    private int mCountOffset;
-    private Context mContext;
 
-    private Paint mPaint;
-    private int mPaintColor = Color.parseColor("#CABFA3");
-    private int mRadius;
+    private PointF[] points;
 
-    private Point[] points;
-    private int[] mHeight;
     private int mDrawWidth = 500;
 
     private CircleDrawHelper mCircleDrawHelper;
 
     private Random mRandom = new Random();
 
-    private Matrix mMatrix = new Matrix();
     private Path mPath = new Path();
 
 
-    public AncientEffectDrawable2(Context context, int count, int countOffset) {
-        mContext = context;
-        mCount = count;
-        mCountOffset = countOffset;
+    public TestDrawable(Context context) {
+        super(context);
         init();
     }
 
@@ -62,11 +53,10 @@ public class AncientEffectDrawable2 extends BaseEffectDrawable {
 
         mCircleDrawHelper = new CircleDrawHelper(mCount / 2);
 
-        mHeight = new int[mCount];
         mDrawWidth = SystemUtil.dip2px(getContext(), mDrawWidth);
-        points = new Point[mCount / 2];
+        points = new PointF[mCount / 2];
         for (int i = 0; i < mCount; i++) {
-            points[i] = new Point();
+            points[i] = new PointF();
         }
     }
 
@@ -153,7 +143,6 @@ public class AncientEffectDrawable2 extends BaseEffectDrawable {
         mPath.reset();
 
         for (int i = 0; i < points.length; i++) {
-            int index = i * mCountOffset;
             int value = 0;
             if (mData != null) {
                 value = (int) mData[i];

@@ -4,6 +4,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.PathMeasure;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.util.Log;
@@ -11,54 +12,54 @@ import com.example.musiceffect.utils.BezierCurveUtil;
 
 public class CircleDrawHelper {
 
-    private Point[] midPoints;
-    private Point[] ratioPoints;
-    private Point[] controlPoints;
+    private PointF[] midPoints;
+    private PointF[] ratioPoints;
+    private PointF[] controlPoints;
     private Path path = new Path();
-    private Point controlPoint1 = new Point();
-    private Point controlPoint2 = new Point();
+    private PointF controlPoint1 = new PointF();
+    private PointF controlPoint2 = new PointF();
 
     public CircleDrawHelper(int count) {
-        midPoints = new Point[count];
-        ratioPoints = new Point[count];
-        controlPoints = new Point[count * 2];
+        midPoints = new PointF[count];
+        ratioPoints = new PointF[count];
+        controlPoints = new PointF[count * 2];
 
         for (int i = 0, j = 0; i < count; i++) {
-            midPoints[i] = new Point();
-            ratioPoints[i] = new Point();
-            controlPoints[j++] = new Point();
-            controlPoints[j++] = new Point();
+            midPoints[i] = new PointF();
+            ratioPoints[i] = new PointF();
+            controlPoints[j++] = new PointF();
+            controlPoints[j++] = new PointF();
         }
     }
 
-    public void calculate(Point[] points, double k) {
+    public void calculate(PointF[] points, double k) {
         int size = points.length;
         // 计算中点
         for (int i = 0; i < size; i++) {
-            Point p1 = points[i];
-            Point p2 = points[(i + 1) % size];
+            PointF p1 = points[i];
+            PointF p2 = points[(i + 1) % size];
             setPoint(midPoints[i], (p1.x + p2.x) / 2, (p1.y + p2.y) / 2);
         }
 
         // 计算比例点
         for (int i = 0; i < size; i++) {
-            Point p1 = points[i];
-            Point p2 = points[(i + 1) % size];
-            Point p3 = points[(i + 2) % size];
+            PointF p1 = points[i];
+            PointF p2 = points[(i + 1) % size];
+            PointF p3 = points[(i + 2) % size];
             double l1 = distance(p1, p2);
             double l2 = distance(p2, p3);
             double ratio = l1 / (l1 + l2);
-            Point mp1 = midPoints[i];
-            Point mp2 = midPoints[(i + 1) % size];
+            PointF mp1 = midPoints[i];
+            PointF mp2 = midPoints[(i + 1) % size];
             ratioPointConvert(mp2, mp1, ratio, ratioPoints[i]);
         }
 
         // 移动线段，计算控制点
         for (int i = 0, j = 0; i < size; i++) {
-            Point ratioPoint = ratioPoints[i];
-            Point verPoint = points[(i + 1) % size];
-            int dx = ratioPoint.x - verPoint.x;
-            int dy = ratioPoint.y - verPoint.y;
+            PointF ratioPoint = ratioPoints[i];
+            PointF verPoint = points[(i + 1) % size];
+            float dx = ratioPoint.x - verPoint.x;
+            float dy = ratioPoint.y - verPoint.y;
             setPoint(controlPoint1, midPoints[i].x - dx, midPoints[i].y - dy);
             setPoint(controlPoint2, midPoints[(i + 1) % size].x - dx, midPoints[(i + 1) % size].y - dy);
             ratioPointConvert(controlPoint1, verPoint, k, controlPoints[j++]);
@@ -66,31 +67,63 @@ public class CircleDrawHelper {
         }
     }
 
-    public void drawBezierCurve(Canvas canvas, Point[] points, Paint paint) {
+    public void drawBezierCurve(Canvas canvas, PointF[] points, Paint paint) {
+        calculatePath(points);
+        canvas.drawPath(path, paint);
+    }
+
+    private void calculatePath(PointF[] points) {
         int size = points.length;
+        path.reset();
         // 用三阶贝塞尔曲线连接顶点
         for (int i = 0; i < size; i++) {
-            Point startPoint = points[i];
-            Point endPoint = points[(i + 1) % size];
-            Point controlPoint1 = controlPoints[(i * 2 + controlPoints.length - 1) % controlPoints.length];
-            Point controlPoint2 = controlPoints[(i * 2) % controlPoints.length];
-            path.reset();
+            PointF startPoint = points[i];
+            PointF endPoint = points[(i + 1) % size];
+            PointF controlPoint1 = controlPoints[(i * 2 + controlPoints.length - 1) % controlPoints.length];
+            PointF controlPoint2 = controlPoints[(i * 2) % controlPoints.length];
             path.moveTo(startPoint.x, startPoint.y);
             path.cubicTo(controlPoint1.x, controlPoint1.y, controlPoint2.x, controlPoint2.y, endPoint.x, endPoint.y);
-            canvas.drawPath(path, paint);
         }
     }
 
-    public void drawBezierCurve2(Canvas canvas, Point[] points, Paint paint) {
+    private PathMeasure mPathMeasure;
+
+    public void drawBezierCurveFill(Canvas canvas, PointF[] points, Paint paint,PointF o) {
+
+        int size = points.length;
+
+        // 用三阶贝塞尔曲线连接顶点
+        for (int i = 0; i < size; i++) {
+            PointF startPoint = points[i];
+            PointF endPoint = points[(i + 1) % size];
+            PointF controlPoint1 = controlPoints[(i * 2 + controlPoints.length - 1) % controlPoints.length];
+            PointF controlPoint2 = controlPoints[(i * 2) % controlPoints.length];
+
+            path.reset();
+            path.moveTo(o.x, o.y);
+            path.lineTo(startPoint.x, startPoint.y);
+            path.cubicTo(controlPoint1.x, controlPoint1.y, controlPoint2.x, controlPoint2.y, endPoint.x, endPoint.y);
+            path.lineTo(o.x, o.y);
+            canvas.drawPath(path, paint);
+        }
+
+    }
+
+
+
+
+
+    @Deprecated
+    public void drawBezierCurve2(Canvas canvas, PointF[] points, Paint paint) {
 
         int size = points.length;
         // 用三阶贝塞尔曲线连接顶点
         for (int i = 0; i < size -1; i++) {
 
-            PointF startPoint = new PointF(points[i]);
-            PointF endPoint = new PointF(points[(i + 1) % size]);
-            PointF controlPoint1 = new PointF(controlPoints[(i * 2 + controlPoints.length - 1) % controlPoints.length]);
-            PointF controlPoint2 = new PointF(controlPoints[(i * 2) % controlPoints.length]);
+            PointF startPoint = points[i];
+            PointF endPoint =  points[(i + 1) % size];
+            PointF controlPoint1 =  controlPoints[(i * 2 + controlPoints.length - 1) % controlPoints.length];
+            PointF controlPoint2 =  controlPoints[(i * 2) % controlPoints.length];
 
             int precision = (int) Math.max(Math.abs(startPoint.x - endPoint.x), Math.abs(startPoint.y - endPoint.y));
 
@@ -128,14 +161,14 @@ public class CircleDrawHelper {
         }
 
         for (int i = 0; i < size; i++) {
-            PointF startPoint = new PointF(points[i]);
+            PointF startPoint =  points[i];
             paint.setColor(Color.BLACK);
             canvas.drawPoint(startPoint.x, startPoint.y, paint);
         }
     }
 
 
-    public void setPoint(Point point, int x, int y) {
+    public void setPoint(PointF point, float x, float y) {
         point.x = x;
         point.y = y;
     }
@@ -143,19 +176,19 @@ public class CircleDrawHelper {
     /**
      * 计算两点之间的距离
      */
-    public double distance(Point p1, Point p2) {
+    public double distance(PointF p1, PointF p2) {
         return Math.sqrt(((p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y)));
     }
 
     /**
      * 比例点转换
      */
-    public void ratioPointConvert(Point p1, Point p2, double ratio, Point p) {
+    public void ratioPointConvert(PointF p1, PointF p2, double ratio, PointF p) {
         p.x = (int) (ratio * (p1.x - p2.x) + p2.x);
         p.y = (int) (ratio * (p1.y - p2.y) + p2.y);
     }
 
-    public void drawCicleLineFromTowPoints(Canvas canvas, Point p1, Point p2, Paint paint) {
+    public void drawCicleLineFromTowPoints(Canvas canvas, PointF p1, PointF p2, Paint paint) {
         if (p1.equals(p2)) {
             return;
         }

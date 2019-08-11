@@ -18,23 +18,23 @@ public class Triangle {
     private float cy;
 
     //平移
-    public float tx;
-    public float ty;
-    public float txDirection;
+    private float tx;
+    private float ty;
+    private float txDirection;
 
     //缩放
-    public float sx = 1;
-    public float sy = 1;
+    private float sx = 1;
+    private float sy = 1;
 
     //旋转
-    public float degrees;
-    public float canvasDegrees;
+    private float degrees;
+    private float canvasDegrees;
 
     //透明度
-    public int alpha = 255;
+    private int alpha = 255;
 
-    public int w;
-    public int h;
+    private int w;
+    private int h;
 
     private long startTime = -1;
 
@@ -44,7 +44,7 @@ public class Triangle {
         mContext = context;
         this.w = w;
         this.h = h;
-        tx = w / 2 + r / 2;
+        tx = w / 2 + r * 2 / 3;
         ty = h / 2;
         sx = SystemUtil.dip2px(context, random.nextFloat() + 2.0f);
         sy = SystemUtil.dip2px(context, random.nextFloat() + 1.0f);
@@ -88,7 +88,6 @@ public class Triangle {
         }
         canvas.save();
         canvas.rotate(canvasDegrees, w / 2, h / 2);
-        p.reset();
         p.reset();
         paint.setAlpha(alpha);
         p.addPath(path);

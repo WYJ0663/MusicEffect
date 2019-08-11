@@ -3,6 +3,7 @@ package com.example.musiceffect;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -34,6 +35,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.test_bezier).setOnClickListener(this);
         findViewById(R.id.ancient).setOnClickListener(this);
         findViewById(R.id.reverberation).setOnClickListener(this);
+        findViewById(R.id.bass).setOnClickListener(this);
+        findViewById(R.id.electronic).setOnClickListener(this);
+        findViewById(R.id.surround).setOnClickListener(this);
+        findViewById(R.id.valve).setOnClickListener(this);
+        findViewById(R.id.Lonelye).setOnClickListener(this);
 
         ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(mAlbumView, "rotation", 0f, 360f);
         objectAnimator.setDuration(20 * 1000);
@@ -61,8 +67,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         Palette.PaletteAsyncListener listener = new Palette.PaletteAsyncListener() {
             public void onGenerated(Palette palette) {
+                int vibrant = palette.getVibrantColor(0x000000);
+                int vibrantLight = palette.getLightVibrantColor(0x000000);
+                int vibrantDark = palette.getDarkVibrantColor(0x000000);
+                int muted = palette.getMutedColor(0x000000);
                 int mutedLight = palette.getLightMutedColor(0x000000);
+                int mutedDark = palette.getDarkMutedColor(0x000000);
                 mEffectView.setColor(mutedLight);
+                mEffectView.setColors(new int[]{mutedLight, muted, vibrantLight, vibrant});
             }
         };
         Palette.generateAsync(bitmap, listener);
@@ -104,6 +116,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.reverberation:
                 mEffectView.setReverberationEffectDrawable();
+                break;
+            case R.id.bass:
+                mEffectView.setBlastBassEffectDrawable();
+                break;
+            case R.id.electronic:
+                mEffectView.setElectronicEffectDrawable();
+                break;
+            case R.id.surround:
+                mEffectView.setSurroundEffectDrawable();
+                break;
+            case R.id.valve:
+                mEffectView.setValveEffectDrawable();
+                break;
+            case R.id.Lonelye:
+                mEffectView.setLonelyEffectDrawable();
                 break;
         }
     }
