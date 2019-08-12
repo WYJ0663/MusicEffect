@@ -46,10 +46,9 @@ public class VisualizerHelper {
             visualizer.setDataCaptureListener(new Visualizer.OnDataCaptureListener() {
                 @Override
                 public void onWaveFormDataCapture(Visualizer visualizer, final byte[] waveform, int samplingRate) {
-//            visualConverter.converter(waveform);
-//                    if (dataCallback != null) {
-//                        dataCallback.onCall(waveform);
-//                    }
+                    if (dataCallback != null) {
+                        dataCallback.onWaveCall(waveform);
+                    }
                 }
 
                 @Override
@@ -68,6 +67,8 @@ public class VisualizerHelper {
 
     public static interface DataCallback {
         void onCall(byte[] data);
+
+        void onWaveCall(byte[] data);
     }
 
 

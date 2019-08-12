@@ -66,10 +66,23 @@
                 android:text="环绕"/>
 
         <Button
-                android:id="@+id/Lonelye"
+                android:id="@+id/lonelye"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="孤独"/>
+
+        <Button
+                android:id="@+id/histogram"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="直方图"/>
+
+        <Button
+                android:id="@+id/palette"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="颜色"/>
+
     </com.example.musiceffect.widget.FlowLayout>
 
     <com.example.musiceffect.widget.EffectView

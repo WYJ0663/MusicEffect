@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import com.example.musiceffect.drawble.AncientEffectDrawable;
 import com.example.musiceffect.drawble.BlastBassEffectDrawable;
 import com.example.musiceffect.drawble.ElectronicEffectDrawable;
+import com.example.musiceffect.drawble.HistogramEffectDrawable;
 import com.example.musiceffect.drawble.LonelyEffectDrawable;
 import com.example.musiceffect.drawble.SurroundEffectDrawable;
 import com.example.musiceffect.drawble.TestDrawable;
@@ -70,6 +71,7 @@ public class EffectView extends ImageView {
     public void setSurroundEffectDrawable() {
         initDrawable(new SurroundEffectDrawable(getContext()));
     }
+
     public void setLonelyEffectDrawable() {
         initDrawable(new LonelyEffectDrawable(getContext()));
     }
@@ -78,6 +80,9 @@ public class EffectView extends ImageView {
         initDrawable(new ValveEffectDrawable(getContext()));
     }
 
+    public void setHistogramEffectDrawablee() {
+        initDrawable(new HistogramEffectDrawable(getContext()));
+    }
 
     @Deprecated
     public void setTestDrawable() {
@@ -110,14 +115,18 @@ public class EffectView extends ImageView {
         }
     }
 
-    public void setData(final byte[] data) {
-        if (data != null) {
-            Log.e("yijunwu", (int) data[0] + " " + (int) data[1]);
-        }
+    public void onCall(final byte[] data) {
+//        if (data != null) {
+//            Log.e("yijunwu", (int) data[0] + " " + (int) data[1]);
+//        }
         if (mDrawable != null) {
-            mDrawable.setData(data);
+            mDrawable.onCall(data);
         }
     }
 
-
+    public void onWaveCall(byte[] data) {
+        if (mDrawable != null) {
+            mDrawable.onWaveCall(data);
+        }
+    }
 }

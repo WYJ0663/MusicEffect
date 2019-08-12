@@ -74,7 +74,7 @@ public class BaseEffectDrawable extends Drawable {
     }
 
 
-    public void setData(final byte[] data) {
+    public void onCall(final byte[] data) {
         if (mIsDrawing) {
             return;
         }
@@ -83,12 +83,16 @@ public class BaseEffectDrawable extends Drawable {
         invalidateSelf();
     }
 
+    public void onWaveCall(byte[] data) {
+
+    }
+
     /**
      * 预处理数据
      *
      * @return
      */
-    private byte[] readyData(byte[] fft) {
+    protected static byte[] readyData(byte[] fft) {
         byte[] newData = new byte[LUMP_COUNT];
         byte abs;
         for (int i = 0; i < LUMP_COUNT; i++) {
@@ -118,6 +122,7 @@ public class BaseEffectDrawable extends Drawable {
     public int getOpacity() {
         return PixelFormat.UNKNOWN;
     }
+
 
 
 }

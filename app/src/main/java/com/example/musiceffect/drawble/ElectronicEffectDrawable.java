@@ -114,7 +114,7 @@ public class ElectronicEffectDrawable extends BaseEffectDrawable {
             mPaint.setColor(mPaintColor);
             canvas.drawRoundRect(mRectF, mLineRectWidth, mLineRectWidth, mPaint);
 
-            float ll = r - mLineRectWidth;
+            float ll = r - mLineRectWidth/2;
             float lt = t;
             float lr = ll + mLightWidth;
             float lb = lt + mLineRectWidth;
